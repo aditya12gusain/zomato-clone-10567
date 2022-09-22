@@ -19,14 +19,12 @@ zomato.get("/", (req, res) => {
 const PORT = 4000;
 
 zomato.listen(PORT, () => {
-  // ConnectDB()
-  //   .then(() => {
-  //     console.log("Server is running !!!");
-  //   })
-  //   .catch((error) => {
-  //     console.log("Server is running, but database connection failed...");
-  //     console.log(error);
-  //   });
-
-  console.log("Server is running !!!");
+  ConnectDB()
+    .then(() => {
+      console.log("Server is running !!!");
+    })
+    .catch((error) => {
+      console.log("Server is running, but database connection failed...");
+      console.log(error);
+    });
 });

@@ -65,6 +65,8 @@ Router.put(
       const { _id } = req.params;
       const { userData } = req.body;
 
+      // Task: Validate User Data
+
       userData.password = undefined;
 
       const updateUserData = await UserModel.findByIdAndUpdate(

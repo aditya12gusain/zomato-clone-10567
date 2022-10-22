@@ -1,12 +1,18 @@
 import React, { useState } from "react";
 import { FaUserAlt } from "react-icons/fa";
 import { HiLocationMarker } from "react-icons/hi";
-import { IoMdArrowDropdown, IoMdArrowDropup } from "react-icons/io";
+import { IoMdArrowDropdown } from "react-icons/io";
 import { RiSearch2Line } from "react-icons/ri";
+import { useNavigate } from "react-router-dom";
 
 // components
 import SignUp from "../Auth/Signup";
 import SignIn from "../Auth/Signin";
+
+// redux
+import { useSelector, useDispatch } from "react-redux";
+import { signOut } from "../../redux/reducers/auth/auth.action";
+import { clearUser } from "../../redux/reducers/user/user.action";
 
 const MobileNav = ({
   user,
@@ -22,6 +28,16 @@ const MobileNav = ({
 
   const SignUp = () => {
     signUp();
+    setIsDropdownOpen(false);
+  };
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const SignOut = () => {
+    dispatch(signOut());
+    dispatch(clearUser());
+    navigate("/delivery");
     setIsDropdownOpen(false);
   };
 
@@ -52,7 +68,7 @@ const MobileNav = ({
             </div>
             {isDropdownOpen && (
               <div className="absolute shadow-lg py-3 -bottom-14 w-36 z-20 flex flex-col gap-2 bg-white border border-gray-200">
-                <button>Sign Out</button>
+                <button onClick={SignOut}>Sign Out</button>
               </div>
             )}
           </>
@@ -92,6 +108,16 @@ const LargeNav = ({
 
   const SignUp = () => {
     signUp();
+    setIsDropdownOpen(false);
+  };
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const SignOut = () => {
+    dispatch(signOut());
+    dispatch(clearUser());
+    navigate("/delivery");
     setIsDropdownOpen(false);
   };
 
@@ -143,7 +169,7 @@ const LargeNav = ({
             </div>
             {isDropdownOpen && (
               <div className="absolute shadow-lg py-3 -bottom-14 -right-0 w-36 z-20 flex flex-col gap-2 bg-white border border-gray-200">
-                <button>Sign Out</button>
+                <button onClick={SignOut}>Sign Out</button>
               </div>
             )}
           </>
@@ -178,9 +204,11 @@ const Navbar = () => {
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  const user = {
-    // fullName: "Aditya",
-  };
+  // const user = {
+  //   // fullName: "Aditya",
+  // };
+
+  const user = useSelector((globalState) => globalState.user);
 
   return (
     <>

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { IoMdArrowDropright } from "react-icons/io";
-import ReactStars from "react-rating-stars-component";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper";
 import "swiper/css";
@@ -13,24 +12,23 @@ import MenuSimilarRestaurantCard from "./MenuSimilarRestaurantCard";
 import ReviewCard from "../Reviews/ReviewCard";
 import MapView from "./MapView";
 
+// redux
+import { useSelector } from "react-redux";
+import { useEffect } from "react";
+
 const Overview = () => {
-  const [restaurant, setRestaurant] = useState({
-    _id: "124ksjf435245jv34fg3",
-    isPro: true,
-    isOff: true,
-    name: "Nathu's Sweets",
-    restaurantReviewValue: "3.7",
-    cuisine: [
-      "Mithai",
-      "South Indian",
-      "Chinese",
-      "Street Food",
-      "Fast Food",
-      "Desserts",
-      "North Indian",
-    ],
-    averageCost: "450",
-  });
+  const [restaurant, setRestaurant] = useState({ cuisine: [] });
+
+  const reduxState = useSelector(
+    (globalState) => globalState.restaurant.selectedRestaurant.restaurant
+  );
+
+  useEffect(() => {
+    if (reduxState) {
+      setRestaurant(reduxState);
+    }
+  }, [reduxState]);
+
   const [menuImages, setMenuImages] = useState([
     "https://b.zmtcdn.com/data/menus/931/931/d40e86a957d1ed6e6fabe5a67a161904.jpg",
     "https://b.zmtcdn.com/data/menus/931/931/36f8a3b9e5dbf6435f903c9a8745bcc8.jpg",
@@ -192,3 +190,19 @@ const Overview = () => {
 };
 
 export default Overview;
+
+// _id: "124ksjf435245jv34fg3",
+//     isPro: true,
+//     isOff: true,
+//     name: "Nathu's Sweets",
+//     restaurantReviewValue: "3.7",
+//     cuisine: [
+//       "Mithai",
+//       "South Indian",
+//       "Chinese",
+//       "Street Food",
+//       "Fast Food",
+//       "Desserts",
+//       "North Indian",
+//     ],
+//     averageCost: "450",

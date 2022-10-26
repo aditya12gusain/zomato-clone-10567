@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { IoMdArrowDropright } from "react-icons/io";
-import ReactStars from "react-rating-stars-component";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper";
 import "swiper/css";
@@ -13,45 +12,43 @@ import MenuSimilarRestaurantCard from "./MenuSimilarRestaurantCard";
 import ReviewCard from "../Reviews/ReviewCard";
 import MapView from "./MapView";
 
+// redux
+import { useSelector, useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { getReview } from "../../redux/reducers/review/review.action";
+import { getImage } from "../../redux/reducers/image/image.action";
+
 const Overview = () => {
-  const [restaurant, setRestaurant] = useState({
-    _id: "124ksjf435245jv34fg3",
-    isPro: true,
-    isOff: true,
-    name: "Nathu's Sweets",
-    restaurantReviewValue: "3.7",
-    cuisine: [
-      "Mithai",
-      "South Indian",
-      "Chinese",
-      "Street Food",
-      "Fast Food",
-      "Desserts",
-      "North Indian",
-    ],
-    averageCost: "450",
-  });
-  const [menuImages, setMenuImages] = useState([
-    "https://b.zmtcdn.com/data/menus/931/931/d40e86a957d1ed6e6fabe5a67a161904.jpg",
-    "https://b.zmtcdn.com/data/menus/931/931/36f8a3b9e5dbf6435f903c9a8745bcc8.jpg",
-    "https://b.zmtcdn.com/data/menus/931/931/8d6623791860b054953b6c2c14d61bcb.jpg",
-    "https://b.zmtcdn.com/data/menus/931/931/6d462a04051c0eabb0067149aa84cc64.jpg",
-  ]);
-  const [reviews, setReviews] = useState([
-    {
-      rating: 3.5,
-      isRestaurantReview: false,
-      createdAt: "Fri Oct 14 2022 20:20:34 GMT+0530 (India Standard Time)",
-      reviewText: "Very bad experience.",
-    },
-    {
-      rating: 4.5,
-      isRestaurantReview: false,
-      createdAt: "Fri Oct 14 2022 20:19:34 GMT+0530 (India Standard Time)",
-      reviewText: "Very good experience.",
-    },
-  ]);
+  const [restaurant, setRestaurant] = useState({ cuisine: [] });
+  const [menuImages, setMenuImages] = useState([]);
+  const [reviews, setReviews] = useState([]);
+
   const { id } = useParams;
+  const dispatch = useDispatch();
+
+  const reduxState = useSelector(
+    (globalState) => globalState.restaurant.selectedRestaurant.restaurant
+  );
+
+  useEffect(() => {
+    if (reduxState) {
+      setRestaurant(reduxState);
+    }
+  }, [reduxState]);
+
+  useEffect(() => {
+    if (reduxState) {
+      dispatch(getImage(reduxState?.menuImages)).then((data) => {
+        const images = [];
+        data.payload.images.map(({ location }) => images.push(location));
+        setMenuImages(images);
+      });
+
+      dispatch(getReview(reduxState?._id)).then((data) => {
+        setReviews(data.payload.reviews);
+      });
+    }
+  }, [reduxState]);
 
   const slideConfig = {
     slidesPerView: 1,
@@ -192,3 +189,19 @@ const Overview = () => {
 };
 
 export default Overview;
+
+// _id: "124ksjf435245jv34fg3",
+//     isPro: true,
+//     isOff: true,
+//     name: "Nathu's Sweets",
+//     restaurantReviewValue: "3.7",
+//     cuisine: [
+//       "Mithai",
+//       "South Indian",
+//       "Chinese",
+//       "Street Food",
+//       "Fast Food",
+//       "Desserts",
+//       "North Indian",
+//     ],
+//     averageCost: "450",
